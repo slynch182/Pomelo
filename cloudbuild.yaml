@@ -5,4 +5,4 @@ images:
 - 'gcr.io/$PROJECT_ID/pomelo'
 options:
   logging: CLOUD_LOGGING_ONLY  # or NONE for no logs
-  
+timeout: '1800'
