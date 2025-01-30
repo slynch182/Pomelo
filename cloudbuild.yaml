@@ -6,3 +6,6 @@ steps:
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/pomelo/pomelo'
 timeout: '1800s'  # Set timeout to 30 minutes
+
+options:
+  logging: CLOUD_LOGGING_ONLY  # or NONE for no logs
