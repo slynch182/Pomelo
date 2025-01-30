@@ -3,3 +3,6 @@ steps:
   args: ['build', '-t', 'gcr.io/pomelo-449418/my-html-page', '.']
 images:
 - 'gcr.io/pomelo-449418/my-html-page'
+options:
+  logging: CLOUD_LOGGING_ONLY  # or NONE for no logs
+  
