@@ -23,23 +23,9 @@
   </style>
 </head>
 <body>
-    <!-- Google Sign-In Button -->
-    <div id="g_id_onload"
-      data-client_id="937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
-      data-context="signin"
-      data-ux_mode="popup"
-      data-itp_support="true">
-    </div>
 
-    <div class="g_id_signin"
-      data-type="standard"
-      data-shape="rectangular"
-      data-theme="filled_blue"
-      data-text="signin_with"
-      data-size="large"
-      data-logo_alignment="left"
-      data-width="180">
-  </div>
+  <!-- Google Sign-In Button -->
+  <button id="login-button" onclick="redirectToGoogle()">Sign In with Google</button>
 
   <h2>User Info</h2>
   <p id="user-info">Not signed in</p>
@@ -48,56 +34,59 @@
   <button id="logout-button" style="display:none;" onclick="logout()">Sign Out</button>
 
   <script>
-      function handleCredentialResponse(response) {
-        console.log("Encoded JWT ID token: " + response.credential);
-        // Decode and use the token (for server-side verification)
-      
-        // Decode JWT Token (Optional - Requires JWT Library)
-        const userData = parseJwt(response.credential);
-        // Store login session
-        sessionStorage.setItem("user", JSON.stringify(userData));
-  
-        // Update UI
-        updateUI(userData);
-      }
+    const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
+    const REDIRECT_URI = "https://pomelo-449513.firebaseapp.com/__/auth/handler"; // Change this to your Firebase auth handler
 
-      function parseJwt(token) {
-        let base64Url = token.split('.')[1];
-        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(decodeURIComponent(escape(atob(base64))));
+    function redirectToGoogle() {
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=email profile openid&state=secure_random_state`;
+      window.location.href = authUrl;
+    }
+
+    function handleOAuthRedirect() {
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get("access_token");
+
+      if (accessToken) {
+        fetchUserInfo(accessToken);
+        localStorage.setItem("access_token", accessToken);
+        window.history.replaceState({}, document.title, window.location.pathname); // Remove token from URL
       }
-  
-      function updateUI(userData) {
-        if (userData) {
-          document.getElementById("user-info").innerHTML = `
-            <b>Name:</b> ${userData.name} <br>
-            <b>Email:</b> ${userData.email} <br>
-            <img src="${userData.picture}" width="100">
-          `;
-          document.getElementById("google-signin-button").style.display = "none";
-          document.getElementById("logout-button").style.display = "block";
-        }
+    }
+
+    async function fetchUserInfo(token) {
+      const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const userData = await response.json();
+
+      document.getElementById("user-info").innerHTML = `
+        <b>Name:</b> ${userData.name} <br>
+        <b>Email:</b> ${userData.email} <br>
+        <img src="${userData.picture}" width="100">
+      `;
+
+      document.getElementById("login-button").style.display = "none";
+      document.getElementById("logout-button").style.display = "block";
+    }
+
+    function logout() {
+      localStorage.removeItem("access_token");
+      document.getElementById("user-info").innerHTML = "Not signed in";
+      document.getElementById("login-button").style.display = "block";
+      document.getElementById("logout-button").style.display = "none";
+    }
+
+    // Run on page load
+    window.onload = function () {
+      const storedToken = localStorage.getItem("access_token");
+      if (storedToken) {
+        fetchUserInfo(storedToken);
+      } else {
+        handleOAuthRedirect();
       }
-    
-      function logout() {
-        google.accounts.id.disableAutoSelect(); // Forget logged-in session
-        sessionStorage.removeItem("user"); // Clear session data
-        document.getElementById("user-info").innerHTML = "Not signed in";
-        document.getElementById("google-signin-button").style.display = "block";
-        document.getElementById("logout-button").style.display = "none";
-      }
-      
-      window.onload = function () {
-        google.accounts.id.initialize({
-          client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
-          callback: handleCredentialResponse
-          ux_mode: "popup",
-          auto_select: true
-        });
-    
-        google.accounts.id.prompt(); // also display the One Tap dialog
-      };
-    </script>
+    };
+  </script>
 
   <p></p>
   <form method="POST" onsubmit="handleSubmit(event)">
