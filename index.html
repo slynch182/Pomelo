@@ -61,11 +61,12 @@
         headers: { Authorization: `Bearer ${token}` }
       });
       const userData = await response.json();
-
+      console.log("User Data:", userData); // Log the userData to check if name, email and picture is present
+  
       document.getElementById("user-info").innerHTML = `
-        <b>Name:</b> ${userData.name} <br>
-        <b>Email:</b> ${userData.email} <br>
-        <img src="${userData.picture}" width="100">
+        <b>Name:</b> ${userData.name || "N/A"} <br>  
+        <b>Email:</b> ${userData.email || "N/A"} <br>
+        <img src="${userData.picture || ""}" width="100">
       `;
 
       document.querySelector(".g_id_signin").style.display = "none";
@@ -90,6 +91,7 @@
       google.accounts.id.initialize({
         client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com",
         callback: handleCredentialResponse
+        scope: 'openid profile email' // Ensure these scopes are present
       });
       google.accounts.id.renderButton(
         document.querySelector(".g_id_signin"),
