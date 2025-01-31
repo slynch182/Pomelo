@@ -7,6 +7,7 @@ const allowedOriginPattern = /^https?:\/\/([a-z0-9-]+\.)*googleusercontent\.com$
 // List of allowed origins
 const allowedOrigins = [
     'https://pomelo-937304914639.us-central1.run.app',
+    'https://lh3.googleusercontent.com'
 ];
 
 const server = http.createServer((req, res) => {
