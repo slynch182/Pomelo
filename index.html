@@ -109,6 +109,10 @@
 
       document.querySelector("#buttonDiv").style.display = "flex";
       document.getElementById("logout-button").style.display = "none";
+
+      // Clear the text box
+      document.querySelector('input[name="text"]').value = '';
+
       clearTable(); // Clear the table on logout
     }
 
