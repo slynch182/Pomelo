@@ -46,6 +46,10 @@
     function handleCredentialResponse(response) {
       console.log('Credential Response:', response);
       const token = response.credential;
+      if (!token) {
+        console.error('No credential token received');
+        return;
+      }
       fetchUserInfo(token);
     }
 
