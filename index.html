@@ -32,15 +32,15 @@
        data-ux_mode="popup"
        data-callback="handleCredentialResponse"
        data-auto_prompt="false"
-       data-width="180">
+       data-width="180"> <!-- Adjust the width as needed -->
   </div>
   <div class="g_id_signin" data-type="standard"></div>
 
-  <h2>User Info</h2>
-  <p id="user-info">Not signed in</p>
-
   <!-- Logout Button -->
   <button id="logout-button" style="display:none;" onclick="logout()">Sign Out</button>
+
+  <h2>User Info</h2>
+  <p id="user-info">Not signed in</p>
 
   <script>
     function handleCredentialResponse(response) {
