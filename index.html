@@ -37,15 +37,14 @@
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const REDIRECT_URI = "https://pomelo-449513.firebaseapp.com/__/auth/handler"; // Change this to your Firebase auth handler
 
-   function generateState() {
+    function generateState() {
       return Math.random().toString(36).substring(2, 15); // Generate a random state value
     }
 
     function redirectToGoogle() {
       const state = generateState();
+      localStorage.setItem('oauth_state', state); // Store state in localStorage
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=email profile openid&state=${state}`;
-      
-      // Store state **in URL**, NOT in localStorage/sessionStorage
       window.location.href = authUrl;
     }
 
@@ -54,9 +53,10 @@
       const params = new URLSearchParams(hash);
       const accessToken = params.get("access_token");
       const returnedState = params.get("state");
+      const storedState = localStorage.getItem('oauth_state'); // Retrieve state from localStorage
 
-      if (!returnedState) {
-        console.error("Missing state. Possible storage issue.");
+      if (!returnedState || returnedState !== storedState) {
+        console.error("State mismatch or missing state. Possible storage issue.");
         return;
       }
 
