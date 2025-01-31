@@ -1,20 +1,20 @@
-# Use the official Nginx image as the base image
+# Use the official Node.js image as the base image
 FROM node:slim
 
-# Set the working directory to /usr/share/nginx/html
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Copy the current directory contents into the container
-ADD . /app
+# Copy package.json and package-lock.json to the working directory
+#COPY package*.json ./
 
-# Expose port 8080 for Google Cloud Run
-#EXPOSE 8080
+# Install dependencies
+#RUN npm install
 
-# Run nodejs in the foreground
-CMD node server.js
+# Copy the rest of the application code to the working directory
+COPY . .
 
+# Expose the port your application listens on
+EXPOSE 8080
 
-
-
-
-
+# Start the application
+CMD ["node", "server.js"]
