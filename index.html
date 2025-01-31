@@ -172,27 +172,25 @@
       if (isJWT(userInput)) {
         try {
           const decodedPayload = await verifyJWT(userInput);
-          addRow(table, "JWT (Verified)", JSON.stringify(decodedPayload, null, 2), true);
+          addRow(table, JSON.stringify(decodedPayload, null, 2), true);
         } catch (error) {
           document.getElementById("error-message").innerText = "Invalid JWT: " + error.message;
-          addRow(table, "JWT (Invalid)", JSON.stringify(decodeJwt(userInput), null, 2), false);
+          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), false);
         }
       } else {
-        addRow(table, "Plain Text", userInput, false);
+        addRow(table, userInput, false);
       }
     }
 
-    function addRow(table, type, content, isValidJWT) {
+    function addRow(table, content, isValidJWT) {
       const row = table.insertRow();
-      const typeCell = row.insertCell(0);
-      const contentCell = row.insertCell(1);
-      const timeCell = row.insertCell(2);
+      const contentCell = row.insertCell(0);
+      const timeCell = row.insertCell(1);
 
       const now = new Date();
       const options = { month: '2-digit', day: '2-digit', year: 'numeric', timeZoneName: 'short' };
       const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
 
-      typeCell.innerText = type;
       contentCell.innerText = content;
       timeCell.innerText = formattedTime;
 
