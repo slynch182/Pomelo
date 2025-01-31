@@ -9,7 +9,7 @@
   <style>
     #buttonDiv {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       margin-bottom: 20px;
     }
 
@@ -69,15 +69,13 @@
       const idToken = response.credential;
       const userData = decodeJwt(idToken); // Decode the JWT token to extract user data
 
-      console.log("Decoded User Data:", userData); // Debugging info
-
       document.getElementById("user-info").innerHTML = `
         <b>Name:</b> ${userData.name} <br>
         <b>Email:</b> ${userData.email} <br>
         <img src="${userData.picture}" width="100">
       `;
 
-      document.querySelector("buttonDiv").style.display = "none";
+      document.querySelector("#buttonDiv").style.display = "none";
       document.getElementById("logout-button").style.display = "block";
     }
    
@@ -106,7 +104,7 @@
       document.getElementById("user-info").innerHTML = "Not signed in";
       document.getElementById("profile-picture").style.display = "none";
 
-      document.querySelector("buttonDiv").style.display = "flex";
+      document.querySelector("#buttonDiv").style.display = "flex";
       document.getElementById("logout-button").style.display = "none";
       clearTable(); // Clear the table on logout
     }
@@ -173,7 +171,7 @@
           addRow(table, "JWT (Verified)", JSON.stringify(decodedPayload, null, 2), true);
         } catch (error) {
           document.getElementById("error-message").innerText = "Invalid JWT: " + error.message;
-        }
+          addRow(table, "JWT (Invalid)", error.message, false);}
       } else {
         addRow(table, "Plain Text", userInput, false);
       }
