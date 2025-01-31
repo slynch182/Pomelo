@@ -46,11 +46,6 @@
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
-    function handleCredentialResponse(response) {
-      const token = response.credential;
-      fetchUserInfo(token);
-    }
-    
     function requestAccessToken() {
       google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
