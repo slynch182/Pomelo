@@ -37,7 +37,7 @@
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const REDIRECT_URI = "https://pomelo-449513.firebaseapp.com/__/auth/handler"; // Change this to your Firebase auth handler
 
-    function generateState() {
+  function generateState() {
       return Math.random().toString(36).substring(2, 15); // Generate a random state value
     }
 
@@ -62,6 +62,7 @@
 
       if (accessToken) {
         fetchUserInfo(accessToken);
+        localStorage.removeItem('oauth_state'); // Clear the stored state
         window.history.replaceState({}, document.title, window.location.pathname); // Clean URL
       }
     }
@@ -93,7 +94,7 @@
       handleOAuthRedirect();
     };
   </script>
-
+  
   <p></p>
   <form method="POST" onsubmit="handleSubmit(event)">
     <input type="text" name="text" placeholder="Enter text here">
