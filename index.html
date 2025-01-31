@@ -70,18 +70,18 @@
         <img src="${userData.picture}" width="100">
       `;
 
-      document.getElementById("login-button").style.display = "none";
+      document.querySelector(".g_id_signin").style.display = "none";
       document.getElementById("logout-button").style.display = "block";
     }
 
     function logout() {
-      gapi.auth2.getAuthInstance().signOut().then(() => {
-        document.getElementById("user-info").innerHTML = "Not signed in";
-        document.getElementById("login-button").style.display = "block";
-        document.getElementById("logout-button").style.display = "none";
-        clearTable(); // Clear the table on logout
-      });
+      google.accounts.id.disableAutoSelect();
+      document.getElementById("user-info").innerHTML = "Not signed in";
+      document.querySelector(".g_id_signin").style.display = "block";
+      document.getElementById("logout-button").style.display = "none";
+      clearTable(); // Clear the table on logout
     }
+
 
     function clearTable() {
       const tableBody = document.querySelector('tbody');
@@ -90,9 +90,15 @@
 
     // Run on page load
     window.onload = function () {
-      gapi.load('auth2', function() {
-        gapi.auth2.init();
+      google.accounts.id.initialize({
+        client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com",
+        callback: handleCredentialResponse
       });
+      google.accounts.id.renderButton(
+        document.querySelector(".g_id_signin"),
+        { theme: "outline", size: "large" }  // customization attributes
+      );
+      google.accounts.id.prompt(); // also display the One Tap dialog
     };
   </script>
   
