@@ -177,7 +177,7 @@
           addRow(table, "JWT (Verified)", JSON.stringify(decodedPayload, null, 2), true);
         } catch (error) {
           document.getElementById("error-message").innerText = "Invalid JWT: " + error.message;
-          addRow(table, "JWT (Invalid)", JSON.stringify(decodedPayload, null, 2) false);
+          addRow(table, "JWT (Invalid)", JSON.stringify(decodeJwt(userInput), null, 2), false);
         }
       } else {
         addRow(table, "Plain Text", userInput, true);
