@@ -44,6 +44,7 @@
 
   <script>
     function handleCredentialResponse(response) {
+      console.log('Credential Response:', response);
       const token = response.credential;
       fetchUserInfo(token);
     }
@@ -59,6 +60,7 @@
         }
 
         const userData = await response.json();
+        console.log('User Data:', userData);
 
         if (!userData.name || !userData.email) {
           throw new Error('Incomplete user info');
