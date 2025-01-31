@@ -42,6 +42,9 @@
   <!-- Logout Button -->
   <button id="logout-button" style="display:none;" onclick="logout()">Sign Out</button>
 
+  <!-- Google Sign-Out Button -->
+  <div id="logout-button" class="g_id_signout" style="display:none;"></div>
+
   <script>
     function handleCredentialResponse(response) {
       const token = response.credential;
