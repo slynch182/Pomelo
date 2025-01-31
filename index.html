@@ -21,6 +21,43 @@
     th {
       text-align: left;
     }
+        /* Google Sign-In Button Style */
+    #login-button {
+      background-color: #4285F4;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 220px; /* Adjust width */
+      height: 50px; /* Adjust height */
+    }
+
+    #login-button img {
+      width: 20px;
+      height: 20px;
+    }
+
+    #login-button:hover {
+      background-color: #357ae8;
+    }
+
+    #logout-button {
+      background-color: #ff4b4b;
+      color: white;
+      font-size: 14px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -34,13 +71,22 @@
        data-auto_prompt="false"
        data-width="180"> <!-- Adjust the width as needed -->
   </div>
-  <div class="g_id_signin" data-type="standard"></div>
+  <div class="g_id_signin"
+       data-type="standard"
+       data-size="large"
+       data-theme="outline"
+       data-text="sign_in_with"
+       data-shape="rectangular"
+       data-logo_alignment="left">
+  </div>
 
   <!-- Logout Button -->
   <button id="logout-button" style="display:none;" onclick="logout()">Sign Out</button>
 
   <h2>User Info</h2>
   <p id="user-info">Not signed in</p>
+  <img id="profile-picture" src="" alt="Profile Picture">
+
 
   <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
@@ -79,10 +125,10 @@
     }
 
     function logout() {
-      google.accounts.id.disableAutoSelect();
       localStorage.removeItem("access_token");
       document.getElementById("user-info").innerHTML = "Not signed in";
-      document.querySelector(".g_id_signin").style.display = "block";
+      document.getElementById("profile-picture").style.display = "none";
+      document.getElementById("login-button").style.display = "flex";
       document.getElementById("logout-button").style.display = "none";
       clearTable(); // Clear the table on logout
     }
