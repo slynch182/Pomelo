@@ -37,8 +37,15 @@
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const REDIRECT_URI = "https://pomelo-449513.firebaseapp.com/__/auth/handler"; // Change this to your Firebase auth handler
 
+    function generateState() {
+      return Math.random().toString(36).substring(2, 15); // Generate random state
+    }
+
     function redirectToGoogle() {
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=email profile openid&state=secure_random_state`;
+      const state = generateState();
+      localStorage.setItem("oauth_state", state); // Store state before redirect
+
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=email profile openid&state=${state}`;
       window.location.href = authUrl;
     }
 
@@ -46,11 +53,19 @@
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
       const accessToken = params.get("access_token");
+      const returnedState = params.get("state");
+
+      // Validate state before processing login
+      const storedState = localStorage.getItem("oauth_state");
+      if (!storedState || storedState !== returnedState) {
+        console.error("OAuth state mismatch or missing state.");
+        return;
+      }
 
       if (accessToken) {
         fetchUserInfo(accessToken);
         localStorage.setItem("access_token", accessToken);
-        window.history.replaceState({}, document.title, window.location.pathname); // Remove token from URL
+        window.history.replaceState({}, document.title, window.location.pathname); // Clean URL
       }
     }
 
@@ -72,6 +87,7 @@
 
     function logout() {
       localStorage.removeItem("access_token");
+      localStorage.removeItem("oauth_state");
       document.getElementById("user-info").innerHTML = "Not signed in";
       document.getElementById("login-button").style.display = "block";
       document.getElementById("logout-button").style.display = "none";
