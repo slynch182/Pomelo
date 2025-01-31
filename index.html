@@ -28,7 +28,6 @@
       data-client_id="937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
       data-context="signin"
       data-ux_mode="popup"
-      data-login_uri="https://pomelo-449513.firebaseapp.com/__/auth/handler"
       data-itp_support="true">
     </div>
 
@@ -45,16 +44,32 @@
       function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token: " + response.credential);
         // Decode and use the token (for server-side verification)
+      
+        // Decode JWT Token (Optional - Requires JWT Library)
+        const userData = parseJwt(response.credential);
+        document.getElementById("user-info").innerHTML = `
+          <b>Name:</b> ${userData.name} <br>
+          <b>Email:</b> ${userData.email} <br>
+          <img src="${userData.picture}" width="100">
+        `;
       }
+
+      function parseJwt(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64));
+      }
+  
       window.onload = function () {
         google.accounts.id.initialize({
           client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
           callback: handleCredentialResponse
           ux_mode: "popup",
+          auto_select: true
         });
     
         google.accounts.id.prompt(); // also display the One Tap dialog
-      }
+      };
     </script>
 
   <p></p>
