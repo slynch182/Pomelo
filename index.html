@@ -196,7 +196,7 @@
       contentCell.innerText = content;
       timeCell.innerText = formattedTime;
 
-      if (!isValidJWT) {
+      if (isValidJWT) {
         row.style.backgroundColor = "red";
       }
     }
