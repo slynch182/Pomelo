@@ -26,7 +26,15 @@
 <body>
 
   <!-- Google Sign-In Button -->
-  <button id="login-button" onclick="redirectToGoogle()">Sign In with Google</button>
+  <div id="g_id_onload"
+       data-client_id="937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
+       data-context="signin"
+       data-ux_mode="popup"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false"
+       data-width="180">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
 
   <h2>User Info</h2>
   <p id="user-info">Not signed in</p>
