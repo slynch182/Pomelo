@@ -32,17 +32,20 @@
       border-radius: 5px;
       cursor: pointer;
       display: none; /* Initially hidden */
-      
+    }
+
     /* CSS to increase the width of the left column in the table */
     table th:first-child,
     table td:first-child {
       width: 200px; /* Adjust the width as needed */
     }
+
     /* CSS to add border to the table */
     table, th, td {
       border: 1px solid black;
       border-collapse: collapse;
     }
+
     /* CSS to align headers to the left */
     th {
       text-align: left;
@@ -69,6 +72,8 @@
       const idToken = response.credential;
       const userData = decodeJwt(idToken); // Decode the JWT token to extract user data
 
+      console.log("Decoded User Data:", userData); // Debugging info
+
       document.getElementById("user-info").innerHTML = `
         <b>Name:</b> ${userData.name} <br>
         <b>Email:</b> ${userData.email} <br>
@@ -78,7 +83,7 @@
       document.querySelector("#buttonDiv").style.display = "none";
       document.getElementById("logout-button").style.display = "block";
     }
-   
+
     function decodeJwt(token) {
       let base64Url = token.split('.')[1];
       let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -144,7 +149,7 @@
     <tbody>
     </tbody>
   </table>
-<script>
+  <script>
     // Public Key for ES256 Verification
     const publicKeyPEM = `
     -----BEGIN PUBLIC KEY-----
@@ -155,25 +160,26 @@
 
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
-  
+
       const userInput = document.querySelector('input[name="text"]').value.trim();
       const table = document.querySelector('tbody');
       document.getElementById("error-message").innerText = ""; // Clear error messages
-  
+
       if (!userInput) {
         document.getElementById("error-message").innerText = "Input cannot be empty.";
         return;
       }
-  
+
       if (isJWT(userInput)) {
         try {
           const decodedPayload = await verifyJWT(userInput);
           addRow(table, "JWT (Verified)", JSON.stringify(decodedPayload, null, 2), true);
         } catch (error) {
           document.getElementById("error-message").innerText = "Invalid JWT: " + error.message;
-          addRow(table, "JWT (Invalid)", error.message, false);}
+          addRow(table, "JWT (Invalid)", error.message, false);
+        }
       } else {
-        addRow(table, "Plain Text", userInput, false);
+        addRow(table, "Plain Text", userInput, true);
       }
     }
 
