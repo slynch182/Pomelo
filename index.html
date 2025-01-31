@@ -177,14 +177,20 @@
       }
     }
 
-    function addRow(table, type, content, , isValidJWT) {
+    function addRow(table, type, content, isValidJWT) {
       const row = table.insertRow();
       const typeCell = row.insertCell(0);
       const contentCell = row.insertCell(1);
+      const timeCell = row.insertCell(2);
+
+      const now = new Date();
+      const options = { month: '2-digit', day: '2-digit', year: 'numeric', timeZoneName: 'short' };
+      const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
 
       typeCell.innerText = type;
       contentCell.innerText = content;
-    
+      timeCell.innerText = formattedTime;
+
       if (!isValidJWT) {
         row.style.backgroundColor = "red";
       }
