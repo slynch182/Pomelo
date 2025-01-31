@@ -43,19 +43,9 @@
   <button id="logout-button" style="display:none;" onclick="logout()">Sign Out</button>
 
   <script>
-    const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
-
-    function loginWithGoogle() {
-      const auth2 = gapi.auth2.getAuthInstance({
-        client_id: CLIENT_ID,
-        cookiepolicy: 'single_host_origin'
-      });
-
-      auth2.signIn().then(googleUser => {
-        const profile = googleUser.getBasicProfile();
-        const id_token = googleUser.getAuthResponse().id_token;
-        fetchUserInfo(id_token);
-      });
+    function handleCredentialResponse(response) {
+      const token = response.credential;
+      fetchUserInfo(token);
     }
 
     async function fetchUserInfo(token) {
@@ -81,7 +71,6 @@
       document.getElementById("logout-button").style.display = "none";
       clearTable(); // Clear the table on logout
     }
-
 
     function clearTable() {
       const tableBody = document.querySelector('tbody');
