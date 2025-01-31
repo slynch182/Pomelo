@@ -1,17 +1,20 @@
-const express = require('express');
-const path = require('path');
-const app = express();
+const http = require('http');
+const fs = require('fs');
 
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Define a route to serve the index.html file
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+const server = http.createServer((req, res) => {
+    // Read the index.html file
+    fs.readFile('index.html', (err, data) => {
+        if (err) {
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.end('Internal Server Error');
+        } else {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+        }
+    });
 });
 
-// Start the server
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log('Server is running on port', port);
+const PORT = 8080;
+server.listen(PORT, () => {
+    console.log('Server running on port ', PORT);
 });
