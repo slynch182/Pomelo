@@ -1,14 +1,20 @@
 # Use the official Nginx image as the base image
-FROM nginx:alpine
+FROM node:slim
 
 # Set the working directory to /usr/share/nginx/html
-WORKDIR /usr/share/nginx/html
+WORKDIR /app
 
-# Copy the current directory contents into the container at /usr/share/nginx/html
-COPY . .
+# Copy the current directory contents into the container
+ADD . /app
 
 # Expose port 8080 for Google Cloud Run
-EXPOSE 8080
+#EXPOSE 8080
 
-# Run Nginx in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Run nodejs in the foreground
+CMD node server.js
+
+
+
+
+
+
