@@ -1,8 +1,19 @@
 const http = require('http');
 const fs = require('fs');
 
+// List of allowed origins
+const allowedOrigins = [
+    'https://pomelo-937304914639.us-central1.run.app',
+    'https://googleusercontent.com/'
+];
+
 const server = http.createServer((req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://pomelo-937304914639.us-central1.run.app'); /* @dev First, read about security */
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
     res.setHeader('Access-Control-Max-Age', 2592000); // 30 days
     res.setHeader('Access-Control-Allow-Headers', 'content-type'); // Might be helpful
