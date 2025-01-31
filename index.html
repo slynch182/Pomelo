@@ -7,6 +7,32 @@
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <title>Simple Webpage</title>
   <style>
+    #buttonDiv {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    /* Profile Picture */
+    #profile-picture {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Logout Button */
+    #logout-button {
+      background-color: #ff4b4b;
+      color: white;
+      font-size: 14px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none; /* Initially hidden */
+      
     /* CSS to increase the width of the left column in the table */
     table th:first-child,
     table td:first-child {
@@ -25,23 +51,15 @@
 </head>
 <body>
 
+  <!-- Google Sign-In Button -->
   <div id="buttonDiv"></div>
-  <!-- Google Sign-In Button 
-  <div id="g_id_onload"
-       data-client_id="937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
-       data-context="signin"
-       data-ux_mode="popup"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false"
-       data-width="180">
-  </div>
-  <div class="g_id_signin" data-type="standard"></div> -->
 
   <!-- Logout Button -->
-  <button id="logout-button" style="display:none;" onclick="logout()">Sign Out</button>
+  <button id="logout-button" onclick="logout()">Sign Out</button>
 
   <h2>User Info</h2>
   <p id="user-info">Not signed in</p>
+  <img id="profile-picture" src="" alt="Profile Picture">
 
   <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
@@ -86,7 +104,9 @@
     function logout() {
       google.accounts.id.disableAutoSelect();
       document.getElementById("user-info").innerHTML = "Not signed in";
-      document.querySelector("buttonDiv").style.display = "block";
+      document.getElementById("profile-picture").style.display = "none";
+
+      document.querySelector("buttonDiv").style.display = "flex";
       document.getElementById("logout-button").style.display = "none";
       clearTable(); // Clear the table on logout
     }
@@ -104,7 +124,7 @@
       });
       google.accounts.id.renderButton(
         document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large" }  // customization attributes
+        { theme: "outline", size: "large", width: 180 }  // customization attributes
       );
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
