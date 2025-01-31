@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <title>Simple Webpage</title>
   <style>
     /* CSS to increase the width of the left column in the table */
@@ -20,44 +23,41 @@
   </style>
 </head>
 <body>
-  <script src="https://accounts.google.com/gsi/client" async></script>
+    <!-- Google Sign-In Button -->
+    <div id="g_id_onload"
+      data-client_id="937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
+      data-context="signin"
+      data-ux_mode="redirect"
+      data-login_uri="https://pomelo-449513.firebaseapp.com/__/auth/handler"
+      data-itp_support="true">
+    </div>
+
+    <div class="g_id_signin"
+      data-type="standard"
+      data-shape="rectangular"
+      data-theme="filled_blue"
+      data-text="signin_with"
+      data-size="large"
+      data-logo_alignment="left"
+      data-width="180">
+  </div>
   <script>
       function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token: " + response.credential);
+        // Decode and use the token (for server-side verification)
       }
       window.onload = function () {
         google.accounts.id.initialize({
           client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
           callback: handleCredentialResponse
+          ux_mode: "redirect",
+          login_uri: "https://pomelo-449513.firebaseapp.com/__/auth/handler"
         });
-        google.accounts.id.renderButton(
-          document.getElementById("g_id_onload"),
-          { theme: "outline", size: "large" }  // customization attributes
-        );
+    
         google.accounts.id.prompt(); // also display the One Tap dialog
-      }
-      function redirectToUri() {
-        window.location.href = "https://pomelo-449513.firebaseapp.com/__/auth/handler";
       }
     </script>
 
-  <div id="g_id_onload"
-    data-client_id="937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
-    data-context="signin"
-    data-ux_mode="popup"
-    data-login_uri="https://pomelo-449513.firebaseapp.com"
-    data-itp_support="true">
-  </div>
-
-  <div class="g_id_signin"
-    data-type="standard"
-    data-shape="rectangular"
-    data-theme="filled_blue"
-    data-text="signin_with"
-    data-size="large"
-    data-logo_alignment="left"
-    data-width="180">
-  </div>
   <p></p>
   <form method="POST" onsubmit="handleSubmit(event)">
     <input type="text" name="text" placeholder="Enter text here">
