@@ -54,30 +54,39 @@
       
         // Decode JWT Token (Optional - Requires JWT Library)
         const userData = parseJwt(response.credential);
-        document.getElementById("user-info").innerHTML = `
-          <b>Name:</b> ${userData.name} <br>
-          <b>Email:</b> ${userData.email} <br>
-          <img src="${userData.picture}" width="100">
-        `;
-        
-        // Hide Sign-In Button & Show Logout
-        document.getElementById("google-signin-button").style.display = "none";
-        document.getElementById("logout-button").style.display = "block";
+        // Store login session
+        sessionStorage.setItem("user", JSON.stringify(userData));
+  
+        // Update UI
+        updateUI(userData);
       }
 
       function parseJwt(token) {
         let base64Url = token.split('.')[1];
         let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(atob(base64));
+        return JSON.parse(decodeURIComponent(escape(atob(base64))));
       }
-
+  
+      function updateUI(userData) {
+        if (userData) {
+          document.getElementById("user-info").innerHTML = `
+            <b>Name:</b> ${userData.name} <br>
+            <b>Email:</b> ${userData.email} <br>
+            <img src="${userData.picture}" width="100">
+          `;
+          document.getElementById("google-signin-button").style.display = "none";
+          document.getElementById("logout-button").style.display = "block";
+        }
+      }
+    
       function logout() {
         google.accounts.id.disableAutoSelect(); // Forget logged-in session
+        sessionStorage.removeItem("user"); // Clear session data
         document.getElementById("user-info").innerHTML = "Not signed in";
         document.getElementById("google-signin-button").style.display = "block";
         document.getElementById("logout-button").style.display = "none";
       }
-    
+      
       window.onload = function () {
         google.accounts.id.initialize({
           client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com"
