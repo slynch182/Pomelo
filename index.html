@@ -90,7 +90,7 @@
     window.onload = function () {
       google.accounts.id.initialize({
         client_id: "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com",
-        callback: handleCredentialResponse
+        callback: handleCredentialResponse,
         scope: 'openid profile email' // Ensure these scopes are present
       });
       google.accounts.id.renderButton(
