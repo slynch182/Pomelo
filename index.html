@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <title>Simple Webpage</title>
   <style>
     /* CSS to increase the width of the left column in the table */
@@ -35,36 +36,18 @@
 
   <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
-    const REDIRECT_URI = "https://pomelo-449513.firebaseapp.com/__/auth/handler"; // Change this to your Firebase auth handler
 
-  function generateState() {
-      return Math.random().toString(36).substring(2, 15); // Generate a random state value
-    }
+    function loginWithGoogle() {
+      const auth2 = gapi.auth2.getAuthInstance({
+        client_id: CLIENT_ID,
+        cookiepolicy: 'single_host_origin'
+      });
 
-    function redirectToGoogle() {
-      const state = generateState();
-      localStorage.setItem('oauth_state', state); // Store state in localStorage
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=email profile openid&state=${state}`;
-      window.location.href = authUrl;
-    }
-
-    function handleOAuthRedirect() {
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      const accessToken = params.get("access_token");
-      const returnedState = params.get("state");
-      const storedState = localStorage.getItem('oauth_state'); // Retrieve state from localStorage
-
-      if (!returnedState || returnedState !== storedState) {
-        console.error("State mismatch or missing state. Possible storage issue.");
-        return;
-      }
-
-      if (accessToken) {
-        fetchUserInfo(accessToken);
-        localStorage.removeItem('oauth_state'); // Clear the stored state
-        window.history.replaceState({}, document.title, window.location.pathname); // Clean URL
-      }
+      auth2.signIn().then(googleUser => {
+        const profile = googleUser.getBasicProfile();
+        const id_token = googleUser.getAuthResponse().id_token;
+        fetchUserInfo(id_token);
+      });
     }
 
     async function fetchUserInfo(token) {
@@ -84,14 +67,24 @@
     }
 
     function logout() {
-      document.getElementById("user-info").innerHTML = "Not signed in";
-      document.getElementById("login-button").style.display = "block";
-      document.getElementById("logout-button").style.display = "none";
+      gapi.auth2.getAuthInstance().signOut().then(() => {
+        document.getElementById("user-info").innerHTML = "Not signed in";
+        document.getElementById("login-button").style.display = "block";
+        document.getElementById("logout-button").style.display = "none";
+        clearTable(); // Clear the table on logout
+      });
+    }
+
+    function clearTable() {
+      const tableBody = document.querySelector('tbody');
+      tableBody.innerHTML = ''; // Clear all rows in the table body
     }
 
     // Run on page load
     window.onload = function () {
-      handleOAuthRedirect();
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
     };
   </script>
   
