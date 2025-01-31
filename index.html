@@ -184,6 +184,10 @@
 
       typeCell.innerText = type;
       contentCell.innerText = content;
+    
+      if (!isValidJWT) {
+        row.style.backgroundColor = "red";
+      }
     }
 
     function isJWT(token) {
