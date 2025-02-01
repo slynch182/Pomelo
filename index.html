@@ -184,7 +184,7 @@
           const decodedPayload = await verifyJWT(userInput);
           addRow(table, JSON.stringify(decodedPayload, null, 2), true);
         } catch (error) {
-          document.getElementById("error-message").innerText = "Invalid JWT: " + error.message;
+          document.getElementById("error-message").innerText = error.message;
           addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), false);
         }
       } else {
