@@ -203,6 +203,10 @@
       } else {
         addRow(table, userInput, false);
       }
+        
+      // Clear the text box and return focus
+      textInput.value = '';
+      textInput.focus();
     }
 
     function addRow(table, content, isValidJWT) {
