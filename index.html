@@ -113,6 +113,9 @@
       // Clear the text box
       document.querySelector('input[name="text"]').value = '';
 
+      // Clear the error message
+      document.getElementById("error-message").innerText = '';
+      
       clearTable(); // Clear the table on logout
       
       // Clear browser history
