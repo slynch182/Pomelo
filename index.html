@@ -178,12 +178,14 @@
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
 
-      const userInput = document.querySelector('input[name="text"]').value.trim();
+      const textInput = document.querySelector('input[name="text"]');
+      const userInput = textInput.value.trim();
       const table = document.querySelector('tbody');
       document.getElementById("error-message").innerText = ""; // Clear error messages
 
       if (!userInput) {
         document.getElementById("error-message").innerText = "Input cannot be empty.";
+        textInput.focus();
         return;
       }
 
