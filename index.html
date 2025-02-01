@@ -114,6 +114,12 @@
       document.querySelector('input[name="text"]').value = '';
 
       clearTable(); // Clear the table on logout
+      
+      // Clear browser history
+      history.replaceState(null, null, location.href);
+      window.addEventListener('popstate', function() {
+        history.pushState(null, null, location.href);
+      });
     }
 
     function clearTable() {
