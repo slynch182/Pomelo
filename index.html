@@ -155,10 +155,6 @@
       );
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
-  </script>
-
-  <script type="module">
-    import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
 
     // Public Key for ES256 Verification
     const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
@@ -223,9 +219,10 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
     function isJWT(token) {
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
-
-    // Ensure the jose library is loaded
-    console.log(jose); // This should log the jose object if the library is loaded correctly
+  </script>
+  
+  <script type="module">
+    import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
 
     async function verifyJWT(token) {
       try {
