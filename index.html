@@ -221,6 +221,9 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
 
+    // Ensure the jose library is loaded
+    console.log(jose); // This should log the jose object if the library is loaded correctly
+
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
