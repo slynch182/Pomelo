@@ -1,0 +1,14 @@
+{
+  "name": "pomelo",
+  "version": "1.0.0",
+  "description": "A project that uses the jose library",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@panva/jose": "^4.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
