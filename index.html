@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://accounts.google.com;">
   <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
-  <script type="module" src="https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <title>Simple Webpage</title>
@@ -230,7 +230,7 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
         try {
           console.log("Verifying token:", token);
           const key = await importPublicKey(publicKeyPEM);
-          const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+          const { payload } = await window.jose.jwtVerify(token, key, { algorithms: ["ES256"] });
           console.log("JWT payload:", payload);
           return payload;
         } catch (error) {
