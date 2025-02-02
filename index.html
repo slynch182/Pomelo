@@ -169,17 +169,15 @@
   </table>
   <script>
     // Public Key for ES256 Verification
-    const publicKeyPEM = '
------BEGIN PUBLIC KEY-----
+    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
 q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
------END PUBLIC KEY-----
-    '
+-----END PUBLIC KEY-----`;
 
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
 
-      const textInput = document.querySelector('input[name="text"]');
+      const textInput = document.querySelector(`input[name="text"]`);
       const userInput = textInput.value.trim();
       const table = document.querySelector('tbody');
       document.getElementById("error-message").innerText = ""; // Clear error messages
