@@ -78,7 +78,7 @@
         console.log("Verifying token:", token);
         const key = await importPublicKey(publicKeyPEM);
         console.log("Public key imported:", key);
-        const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+        const { payload, header } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
         console.log("JWT header:", header);
         console.log("JWT payload:", payload);
         return payload;
