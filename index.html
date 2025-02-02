@@ -239,15 +239,18 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
 
-    async function verifyJWT(token) {
-      try {
-        const key = await importPublicKey(publicKeyPEM);
-        const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
-        return payload;
-      } catch (error) {
-        throw new Error("JWT verification failed.");
-      }
-    }
+async function verifyJWT(token) {
+  try {
+    console.log("Verifying token:", token);
+    const key = await importPublicKey(publicKeyPEM);
+    const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+    console.log("JWT payload:", payload);
+    return payload;
+  } catch (error) {
+    console.error("JWT verification failed:", error);
+    throw new Error("JWT verification failed: " + error.message);
+  }
+}
 
     async function importPublicKey(pem) {
       const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
