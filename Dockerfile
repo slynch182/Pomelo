@@ -4,11 +4,11 @@ FROM node:slim
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
-#COPY package*.json ./
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Install dependencies
-#RUN npm install
+# Install dependencies including jose
+RUN npm install @panva/jose
 
 # Copy the rest of the application code to the working directory
 COPY . .
