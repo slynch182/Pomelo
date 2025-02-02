@@ -223,7 +223,7 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
       
       if (isJWT(userInput)) {
         try {
-          const decodedPayload = await verifyJWT(userInput);
+          const decodedPayload = await window.verifyJWT(userInput);
           addRow(table, JSON.stringify(decodedPayload, null, 2), true);
         } catch (error) {
           document.getElementById("error-message").innerText = error.message;
