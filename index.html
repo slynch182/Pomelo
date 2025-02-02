@@ -68,7 +68,6 @@
   <button id="logout-button" onclick="logout()">Sign Out</button>
 
   <p id="user-info">Hello! You are not signed in.</p>
-  <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
 
   <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
@@ -155,26 +154,7 @@
       );
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
-  </script>
-  
-  <p></p>
-  <form method="POST" onsubmit="handleSubmit(event)">
-    <input type="text" name="text" placeholder="Enter text here">
-    <button type="submit">Submit</button>
-    <p id="error-message" style="color: red;"></p>
-  </form>
-  <h2>Submitted Text</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Text</th>
-        <th>Date and Time</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <script>
+
     // Public Key for ES256 Verification
     const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
@@ -184,7 +164,7 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
 
-      const textInput = document.querySelector(`input[name="text"]`);
+      const textInput = document.querySelector('input[name="text"]');
       const userInput = textInput.value.trim();
       const table = document.querySelector('tbody');
       document.getElementById("error-message").innerText = ""; // Clear error messages
@@ -239,18 +219,16 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
 
-async function verifyJWT(token) {
-  try {
-    console.log("Verifying token:", token);
-    const key = await importPublicKey(publicKeyPEM);
-    const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
-    console.log("JWT payload:", payload);
-    return payload;
-  } catch (error) {
-    console.error("JWT verification failed:", error);
-    throw new Error("JWT verification failed: " + error.message);
-  }
-}
+    async function verifyJWT(token) {
+      try {
+        const key = await importPublicKey(publicKeyPEM);
+        const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+        return payload;
+      } catch (error) {
+        console.error("JWT verification failed:", error);
+        throw new Error("JWT verification failed: " + error.message);
+      }
+    }
 
     async function importPublicKey(pem) {
       const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
