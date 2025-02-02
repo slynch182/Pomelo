@@ -1,9 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 
-// Regular expression to match all subdomains of googleusercontent.com
-const allowedOriginPattern = /^https?:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/;
-
 // List of allowed origins
 const allowedOrigins = [
     'https://pomelo-937304914639.us-central1.run.app'
@@ -11,10 +8,6 @@ const allowedOrigins = [
 
 const server = http.createServer((req, res) => {
     const origin = req.headers.origin;
-
-    if (allowedOrigins.includes(origin) || allowedOriginPattern.test(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
 
     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
     res.setHeader('Access-Control-Max-Age', 2592000); // 30 days
