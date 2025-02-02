@@ -156,12 +156,6 @@
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
 
-    // Public Key for ES256 Verification
-    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
-q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
------END PUBLIC KEY-----`;
-
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
 
@@ -223,6 +217,12 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
   
   <script type="module">
     import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
+
+    // Public Key for ES256 Verification
+    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
+q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
+-----END PUBLIC KEY-----`;
 
     async function verifyJWT(token) {
       try {
