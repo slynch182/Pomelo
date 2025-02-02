@@ -70,7 +70,7 @@
   <p id="user-info">Hello! You are not signed in.</p>
   <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
 
-  <script type="module">
+  <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
@@ -155,7 +155,9 @@
       );
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
+  </script>
 
+  <script type="module">
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
 
