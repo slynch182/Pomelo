@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://accounts.google.com;">
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
   <script src="https://cdn.jsdelivr.net/npm/@panva/jose@2.x/dist/browser/jose.min.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -155,26 +156,7 @@
       );
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
-  </script>
   
-  <p></p>
-  <form method="POST" onsubmit="handleSubmit(event)">
-    <input type="text" name="text" placeholder="Enter text here">
-    <button type="submit">Submit</button>
-    <p id="error-message" style="color: red;"></p>
-  </form>
-  <h2>Submitted Text</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Text</th>
-        <th>Date and Time</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <script>
     // Public Key for ES256 Verification
     const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
@@ -239,18 +221,18 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
 
-async function verifyJWT(token) {
-  try {
-    console.log("Verifying token:", token);
-    const key = await importPublicKey(publicKeyPEM);
-    const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
-    console.log("JWT payload:", payload);
-    return payload;
-  } catch (error) {
-    console.error("JWT verification failed:", error);
-    throw new Error("JWT verification failed: " + error.message);
-  }
-}
+    async function verifyJWT(token) {
+      try {
+        console.log("Verifying token:", token);
+        const key = await importPublicKey(publicKeyPEM);
+        const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+        console.log("JWT payload:", payload);
+        return payload;
+      } catch (error) {
+        console.error("JWT verification failed:", error);
+        throw new Error("JWT verification failed: " + error.message);
+      }
+    }
 
     async function importPublicKey(pem) {
       const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
@@ -267,5 +249,24 @@ async function verifyJWT(token) {
       );
     }
   </script>
+  
+  <p></p>
+  <form method="POST" onsubmit="handleSubmit(event)">
+    <input type="text" name="text" placeholder="Enter text here">
+    <button type="submit">Submit</button>
+    <p id="error-message" style="color: red;"></p>
+  </form>
+  <h2>Submitted Text</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Text</th>
+        <th>Date and Time</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
 </body>
 </html>
