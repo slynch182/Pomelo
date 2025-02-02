@@ -70,7 +70,7 @@
   <p id="user-info">Hello! You are not signed in.</p>
   <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
 
-  <script>
+  <script type="module">
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
@@ -213,9 +213,8 @@
     function isJWT(token) {
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
-  </script>
+
   
-  <script type="module">
     import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
 
     // Public Key for ES256 Verification
