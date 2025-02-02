@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://accounts.google.com;">
   <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+  <script src="https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <title>Simple Webpage</title>
@@ -70,9 +71,7 @@
   <p id="user-info">Hello! You are not signed in.</p>
   <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
 
-<script type="module">
-    import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
-
+  <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
@@ -239,22 +238,21 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
           throw new Error("JWT verification failed: " + error.message);
         }
       }
-  
-      async function importPublicKey(pem) {
-        const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
-        const binaryDer = new Uint8Array(binaryDerString.length);
-        for (let i = 0; i < binaryDerString.length; i++) {
-          binaryDer[i] = binaryDerString.charCodeAt(i);
-        }
-        return await crypto.subtle.importKey(
-          "spki",
-          binaryDer.buffer,
-          { name: "ECDSA", namedCurve: "P-256" },
-          true,
-          ["verify"]
-        );
+
+    async function importPublicKey(pem) {
+      const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
+      const binaryDer = new Uint8Array(binaryDerString.length);
+      for (let i = 0; i < binaryDerString.length; i++) {
+        binaryDer[i] = binaryDerString.charCodeAt(i);
       }
-    });
+      return await crypto.subtle.importKey(
+        "spki",
+        binaryDer.buffer,
+        { name: "ECDSA", namedCurve: "P-256" },
+        true,
+        ["verify"]
+      );
+    }
   </script>
   
   <p></p>
