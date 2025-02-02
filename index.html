@@ -70,6 +70,48 @@
   <p id="user-info">Hello! You are not signed in.</p>
   <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
 
+  <script type="module">
+    import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
+
+    // Public Key for ES256 Verification
+    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
+q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
+-----END PUBLIC KEY-----`;
+
+    async function verifyJWT(token) {
+      try {
+        console.log("Verifying token:", token);
+        const key = await importPublicKey(publicKeyPEM);
+        console.log("Public key imported:", key);
+        const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+        console.log("JWT header:", header);
+        console.log("JWT payload:", payload);
+        return payload;
+      } catch (error) {
+        console.error("JWT verification failed:", error);
+        throw new Error("JWT verification failed: " + error.message);
+      }
+    }
+
+    async function importPublicKey(pem) {
+      const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
+      const binaryDer = new Uint8Array(binaryDerString.length);
+      for (let i = 0; i < binaryDerString.length; i++) {
+        binaryDer[i] = binaryDerString.charCodeAt(i);
+      }
+      return await crypto.subtle.importKey(
+        "spki",
+        binaryDer.buffer,
+        { name: "ECDSA", namedCurve: "P-256" },
+        true,
+        ["verify"]
+      );
+    }
+      
+    window.verifyJWT = verifyJWT;
+  </script>
+
   <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
@@ -155,46 +197,6 @@
       );
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
-  </script>
-
-  <script type="module">
-    import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
-
-    // Public Key for ES256 Verification
-    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
-q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
------END PUBLIC KEY-----`;
-
-    async function verifyJWT(token) {
-      try {
-        console.log("Verifying token:", token);
-        const key = await importPublicKey(publicKeyPEM);
-        console.log("Public key imported:", key);
-        const { payload } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
-        console.log("JWT header:", header);
-        console.log("JWT payload:", payload);
-        return payload;
-      } catch (error) {
-        console.error("JWT verification failed:", error);
-        throw new Error("JWT verification failed: " + error.message);
-      }
-    }
-
-    async function importPublicKey(pem) {
-      const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
-      const binaryDer = new Uint8Array(binaryDerString.length);
-      for (let i = 0; i < binaryDerString.length; i++) {
-        binaryDer[i] = binaryDerString.charCodeAt(i);
-      }
-      return await crypto.subtle.importKey(
-        "spki",
-        binaryDer.buffer,
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["verify"]
-      );
-    }
   </script>
 
   <script>
