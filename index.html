@@ -70,162 +70,159 @@
   <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
 
 <script type="module">
-    import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
-
-    const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
-    const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
-
-    function handleCredentialResponse(response) {
-      const idToken = response.credential;
-      const userData = decodeJwt(idToken); // Decode the JWT token to extract user data
-
-      console.log("Decoded User Data:", userData); // Debugging info
-
-      document.getElementById("user-info").innerHTML = `
-        Welcome ${userData.name} (${userData.email})
-      `;
-      
-      if (userData.picture) {
-        document.getElementById("profile-picture").src = userData.picture;
-        document.getElementById("profile-picture").style.display = "block";
-      } else {
-        document.getElementById("profile-picture").style.display = "none";
-      }
-      
-      document.querySelector("#buttonDiv").style.display = "none";
-      document.getElementById("logout-button").style.display = "block";
-    }
-
-    function decodeJwt(token) {
-      let base64Url = token.split('.')[1];
-      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(decodeURIComponent(escape(atob(base64))));
-    }
-
-    function requestAccessToken() {
-      google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: "openid profile email",
-        prompt: "consent",
-        callback: (response) => {
-          if (response.access_token) {
-            localStorage.setItem("access_token", response.access_token);
-            fetchUserInfo(response.access_token);
-          }
-        }
-      }).requestAccessToken();
-    }
-
-    function logout() {
-      google.accounts.id.disableAutoSelect();
-      document.getElementById("user-info").innerHTML = "Hello! You are not signed in.";
-      document.getElementById("profile-picture").style.display = "none";
-
-      document.querySelector("#buttonDiv").style.display = "flex";
-      document.getElementById("logout-button").style.display = "none";
-
-      // Clear the text box
-      document.querySelector('input[name="text"]').value = '';
-
-      // Clear the error message
-      document.getElementById("error-message").innerText = '';
-      
-      clearTable(); // Clear the table on logout
-      
-      // Clear browser history
-      history.replaceState(null, null, location.href);
-      window.addEventListener('popstate', function() {
-        history.pushState(null, null, location.href);
-      });
-    }
-
-    function clearTable() {
-      const tableBody = document.querySelector('tbody');
-      tableBody.innerHTML = ''; // Clear all rows in the table body
-    }
-
-    // Run on page load
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: CLIENT_ID,
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large", width: 180 }  // customization attributes
-      );
-      google.accounts.id.prompt(); // Also display the One Tap dialog
-    };
-  
-    // Public Key for ES256 Verification
-    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
-q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
------END PUBLIC KEY-----`;
-
-    async function handleSubmit(event) {
-      event.preventDefault(); // Prevent form submission from reloading the page
-
-      const textInput = document.querySelector(`input[name="text"]`);
-      const userInput = textInput.value.trim();
-      const table = document.querySelector('tbody');
-      document.getElementById("error-message").innerText = ""; // Clear error messages
-
-      if (!userInput) {
-        document.getElementById("error-message").innerText = "Input cannot be empty.";
-        textInput.focus();
-        return;
-      }
-
-      const now = new Date();
-      const options = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
-      const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
-      const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
-      
-      if (isJWT(userInput)) {
-        try {
-          const decodedPayload = await verifyJWT(userInput);
-          addRow(table, JSON.stringify(decodedPayload, null, 2), true);
-        } catch (error) {
-          document.getElementById("error-message").innerText = error.message;
-          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), false);
-        }
-      } else {
-        addRow(table, userInput, false);
-      }
-        
-      // Clear the text box and return focus
-      textInput.value = '';
-      textInput.focus();
-    }
-
-    function addRow(table, content, isValidJWT) {
-      const row = table.insertRow();
-      const contentCell = row.insertCell(0);
-      const timeCell = row.insertCell(1);
-
-      const now = new Date();
-      const options = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
-      const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
-      const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
-
-      contentCell.innerText = content;
-      timeCell.innerText = formattedTime;
-
-      if (isValidJWT) {
-        row.style.backgroundColor = "red";
-      }
-    }
-
-    function isJWT(token) {
-      return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
-    }
-
-    // Ensure the jose library is loaded
-    console.log(jose); // This should log the jose object if the library is loaded correctly
-
     document.addEventListener('DOMContentLoaded', (event) => {
       // Your existing script here
+      import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
+  
+      const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
+      const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+  
+      function handleCredentialResponse(response) {
+        const idToken = response.credential;
+        const userData = decodeJwt(idToken); // Decode the JWT token to extract user data
+  
+        console.log("Decoded User Data:", userData); // Debugging info
+  
+        document.getElementById("user-info").innerHTML = `
+          Welcome ${userData.name} (${userData.email})
+        `;
+        
+        if (userData.picture) {
+          document.getElementById("profile-picture").src = userData.picture;
+          document.getElementById("profile-picture").style.display = "block";
+        } else {
+          document.getElementById("profile-picture").style.display = "none";
+        }
+        
+        document.querySelector("#buttonDiv").style.display = "none";
+        document.getElementById("logout-button").style.display = "block";
+      }
+  
+      function decodeJwt(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(decodeURIComponent(escape(atob(base64))));
+      }
+  
+      function requestAccessToken() {
+        google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: "openid profile email",
+          prompt: "consent",
+          callback: (response) => {
+            if (response.access_token) {
+              localStorage.setItem("access_token", response.access_token);
+              fetchUserInfo(response.access_token);
+            }
+          }
+        }).requestAccessToken();
+      }
+  
+      function logout() {
+        google.accounts.id.disableAutoSelect();
+        document.getElementById("user-info").innerHTML = "Hello! You are not signed in.";
+        document.getElementById("profile-picture").style.display = "none";
+  
+        document.querySelector("#buttonDiv").style.display = "flex";
+        document.getElementById("logout-button").style.display = "none";
+  
+        // Clear the text box
+        document.querySelector('input[name="text"]').value = '';
+  
+        // Clear the error message
+        document.getElementById("error-message").innerText = '';
+        
+        clearTable(); // Clear the table on logout
+        
+        // Clear browser history
+        history.replaceState(null, null, location.href);
+        window.addEventListener('popstate', function() {
+          history.pushState(null, null, location.href);
+        });
+      }
+  
+      function clearTable() {
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = ''; // Clear all rows in the table body
+      }
+  
+      // Run on page load
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: CLIENT_ID,
+          callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+          document.getElementById("buttonDiv"),
+          { theme: "outline", size: "large", width: 180 }  // customization attributes
+        );
+        google.accounts.id.prompt(); // Also display the One Tap dialog
+      };
+    
+      // Public Key for ES256 Verification
+      const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
+  MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
+  q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
+  -----END PUBLIC KEY-----`;
+  
+      async function handleSubmit(event) {
+        event.preventDefault(); // Prevent form submission from reloading the page
+  
+        const textInput = document.querySelector(`input[name="text"]`);
+        const userInput = textInput.value.trim();
+        const table = document.querySelector('tbody');
+        document.getElementById("error-message").innerText = ""; // Clear error messages
+  
+        if (!userInput) {
+          document.getElementById("error-message").innerText = "Input cannot be empty.";
+          textInput.focus();
+          return;
+        }
+  
+        const now = new Date();
+        const options = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+        const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
+        const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
+        
+        if (isJWT(userInput)) {
+          try {
+            const decodedPayload = await verifyJWT(userInput);
+            addRow(table, JSON.stringify(decodedPayload, null, 2), true);
+          } catch (error) {
+            document.getElementById("error-message").innerText = error.message;
+            addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), false);
+          }
+        } else {
+          addRow(table, userInput, false);
+        }
+          
+        // Clear the text box and return focus
+        textInput.value = '';
+        textInput.focus();
+      }
+  
+      function addRow(table, content, isValidJWT) {
+        const row = table.insertRow();
+        const contentCell = row.insertCell(0);
+        const timeCell = row.insertCell(1);
+  
+        const now = new Date();
+        const options = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+        const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
+        const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
+  
+        contentCell.innerText = content;
+        timeCell.innerText = formattedTime;
+  
+        if (isValidJWT) {
+          row.style.backgroundColor = "red";
+        }
+      }
+  
+      function isJWT(token) {
+        return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
+      }
+
       async function verifyJWT(token) {
         try {
           console.log("Verifying token:", token);
