@@ -73,12 +73,6 @@
   <script type="module">
     import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
 
-    // Public Key for ES256 Verification
-    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
-q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
------END PUBLIC KEY-----`;
-
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
@@ -110,6 +104,8 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
     }
       
     window.verifyJWT = verifyJWT;
+    window.importPublicKey = importPublicKey;
+
   </script>
 
   <script>
@@ -200,6 +196,12 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
   </script>
 
   <script>
+    // Public Key for ES256 Verification
+    const publicKeyPEM =   `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
+q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
+-----END PUBLIC KEY-----`;
+
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
 
