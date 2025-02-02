@@ -7,7 +7,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@panva/jose": "^4.0.0"
+    "jose": "^4.0.0"
   },
   "author": "",
   "license": "ISC"
