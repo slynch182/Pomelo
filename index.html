@@ -321,6 +321,11 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
     function isJWT(token) {
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
+
+    function clearPublicKey() {
+      document.querySelector('textarea[name="public-key"]').value = '';
+    }
+
   </script>
 
   <p></p>
@@ -343,7 +348,8 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
   </table>
 
   <h2>Enter Public Key</h2>
-  <textarea name="public-key" rows="10" cols="50" placeholder="Enter your public key here..."></textarea>
+  <textarea name="public-key" rows="8" cols="100" placeholder="Enter your public key here..."></textarea>
+  <button onclick="clearPublicKey()">Clear</button> <!-- Highlighted change: Added clear button -->
 
 </body>
 </html>
