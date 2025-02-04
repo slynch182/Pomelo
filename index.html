@@ -97,7 +97,7 @@
       }
     }
     
-    async function importKey(key, algorithm) {
+    async function importPublicKey(key, algorithm) {
       if (algorithm.startsWith('HS')) {
         // For HMAC algorithms
         return await crypto.subtle.importKey(
