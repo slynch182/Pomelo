@@ -69,23 +69,23 @@
 
   <p id="user-info">Hello! You are not signed in.</p>
   <img id="profile-picture" src="" alt="Profile Picture" referrerpolicy="no-referrer"/>
-
+  
   <script type="module">
     import * as jose from 'https://cdn.jsdelivr.net/npm/jose@latest/dist/browser/index.min.js';
-
+  
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
-    
+  
         // Decode the JWT header to get the algorithm
         const headerBase64Url = token.split('.')[0];
         const headerBase64 = headerBase64Url.replace(/-/g, '+').replace(/_/g, '/');
         const headerJson = JSON.parse(window.atob(headerBase64));
         const algorithm = headerJson.alg;
-    
+  
         console.log("JWT header:", headerJson);
         console.log("Algorithm:", algorithm);
-    
+  
         const key = await importPublicKey(publicKeyPEM, algorithm);
         console.log("Public key imported:", key);
         const { payload, header } = await jose.jwtVerify(token, key, { algorithms: [algorithm] });
@@ -96,25 +96,25 @@
         throw new Error("JWT verification failed: " + error.message);
       }
     }
-    
-    async function importPublicKey(key, algorithm) {
+  
+    async function importPublicKey(pem, algorithm) {
       if (algorithm.startsWith('HS')) {
         // For HMAC algorithms
         return await crypto.subtle.importKey(
           "raw",
-          new TextEncoder().encode(key),
+          new TextEncoder().encode(pem),
           { name: "HMAC", hash: { name: `SHA-${algorithm.slice(2)}` } },
           true,
           ["verify"]
         );
       } else {
         // For RSA, ECDSA, EdDSA algorithms
-        const binaryDerString = window.atob(key.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
+        const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
         const binaryDer = new Uint8Array(binaryDerString.length);
         for (let i = 0; i < binaryDerString.length; i++) {
           binaryDer[i] = binaryDerString.charCodeAt(i);
         }
-    
+  
         let algoParams;
         switch (algorithm) {
           case "RS256":
@@ -142,7 +142,7 @@
           default:
             throw new Error("Unsupported algorithm: " + algorithm);
         }
-    
+  
         return await crypto.subtle.importKey(
           "spki",
           binaryDer.buffer,
@@ -151,22 +151,22 @@
           ["verify"]
         );
       }
-    }  
+    }
+  
     window.verifyJWT = verifyJWT;
     window.importPublicKey = importPublicKey;
-    
   </script>
-
+  
   <script>
     const CLIENT_ID = "937304914639-jvs3kcp6srocp481en53p7ajm8jvfq99.apps.googleusercontent.com";
     const USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
-
+  
     function handleCredentialResponse(response) {
       const idToken = response.credential;
       const userData = decodeJwt(idToken); // Decode the JWT token to extract user data
-
+  
       console.log("Decoded User Data:", userData); // Debugging info
-
+  
       document.getElementById("user-info").innerHTML = `
         Welcome ${userData.name} (${userData.email})
       `;
@@ -181,13 +181,13 @@
       document.querySelector("#buttonDiv").style.display = "none";
       document.getElementById("logout-button").style.display = "block";
     }
-
+  
     function decodeJwt(token) {
       let base64Url = token.split('.')[1];
       let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       return JSON.parse(decodeURIComponent(escape(atob(base64))));
     }
-
+  
     function requestAccessToken() {
       google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
@@ -201,18 +201,18 @@
         }
       }).requestAccessToken();
     }
-
+  
     function logout() {
       google.accounts.id.disableAutoSelect();
       document.getElementById("user-info").innerHTML = "Hello! You are not signed in.";
       document.getElementById("profile-picture").style.display = "none";
-
+  
       document.querySelector("#buttonDiv").style.display = "flex";
       document.getElementById("logout-button").style.display = "none";
-
+  
       // Clear the text box
       document.querySelector('input[name="text"]').value = '';
-
+  
       // Clear the error message
       document.getElementById("error-message").innerText = '';
       
@@ -224,12 +224,12 @@
         history.pushState(null, null, location.href);
       });
     }
-
+  
     function clearTable() {
       const tableBody = document.querySelector('tbody');
       tableBody.innerHTML = ''; // Clear all rows in the table body
     }
-
+  
     // Run on page load
     window.onload = function () {
       google.accounts.id.initialize({
@@ -243,28 +243,28 @@
       google.accounts.id.prompt(); // Also display the One Tap dialog
     };
   </script>
-
+  
   <script>
     // Public Key for ES256 Verification
     const publicKeyPEM = `-----BEGIN PUBLIC KEY-----
-MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEMU1JFVEO9FkVr0r041GpAWzKvQi1TBYm
-arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
------END PUBLIC KEY-----`;
-
+    MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEMU1JFVEO9FkVr0r041GpAWzKvQi1TBYm
+    arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
+    -----END PUBLIC KEY-----`;
+  
     async function handleSubmit(event) {
       event.preventDefault(); // Prevent form submission from reloading the page
-
+  
       const textInput = document.querySelector(`input[name="text"]`);
       const userInput = textInput.value.trim();
       const table = document.querySelector('tbody');
       document.getElementById("error-message").innerText = ""; // Clear error messages
-
+  
       if (!userInput) {
         document.getElementById("error-message").innerText = "Input cannot be empty.";
         textInput.focus();
         return;
       }
-
+  
       const now = new Date();
       const options = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
       const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
@@ -286,25 +286,25 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
       textInput.value = '';
       textInput.focus();
     }
-
+  
     function addRow(table, content, isValidJWT) {
       const row = table.insertRow();
       const contentCell = row.insertCell(0);
       const timeCell = row.insertCell(1);
-
+  
       const now = new Date();
       const options = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
       const formattedTime = now.toLocaleDateString('en-US', options).replace(',', '');
       const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
-
+  
       contentCell.innerText = content;
       timeCell.innerText = formattedTime;
-
+  
       if (isValidJWT) {
         row.style.backgroundColor = "red";
       }
     }
-
+  
     function isJWT(token) {
       return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
     }
