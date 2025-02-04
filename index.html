@@ -76,9 +76,20 @@
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
+
+        // Decode the JWT header to get the algorithm
+        const headerBase64Url = token.split('.')[0];
+        const headerBase64 = headerBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const headerJson = JSON.parse(window.atob(headerBase64));
+        const algorithm = header.alg;
+    
+        console.log("JWT header:", header);
+        console.log("Algorithm:", algorithm);
+
+
         const key = await importPublicKey(publicKeyPEM);
         console.log("Public key imported:", key);
-        const { payload, header } = await jose.jwtVerify(token, key, { algorithms: ["ES256"] });
+        const { payload, header } = await jose.jwtVerify(token, key, { algorithms: [algorithm] });
         console.log("JWT header:", header);
         console.log("JWT payload:", payload);
         return payload;
@@ -94,10 +105,35 @@
       for (let i = 0; i < binaryDerString.length; i++) {
         binaryDer[i] = binaryDerString.charCodeAt(i);
       }
+
+      let algoParams;
+      switch (algorithm) {
+      case "RS256":
+      case "RS384":
+      case "RS512":
+        algoParams = { name: "RSASSA-PKCS1-v1_5", hash: { name: algorithm.replace('RS', 'SHA-') } };
+        break;
+      case "PS256":
+      case "PS384":
+      case "PS512":
+        algoParams = { name: "RSA-PSS", hash: { name: algorithm.replace('PS', 'SHA-') } };
+        break;
+      case "ES256":
+      case "ES384":
+      case "ES512":
+        algoParams = { name: "ECDSA", namedCurve: algorithm.replace('ES', 'P-') };
+        break;
+      case "EdDSA":
+        algoParams = { name: "Ed25519" }; // Assuming Ed25519 for simplicity
+        break;
+      default:
+        throw new Error("Unsupported algorithm: " + algorithm);
+      }
+  
       return await crypto.subtle.importKey(
         "spki",
         binaryDer.buffer,
-        { name: "ECDSA", namedCurve: "P-256" },
+        algoParams,
         true,
         ["verify"]
       );
