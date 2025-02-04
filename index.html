@@ -142,15 +142,15 @@
           default:
             throw new Error("Unsupported algorithm: " + algorithm);
         }
-  
-      return await crypto.subtle.importKey(
-        "spki",
-        binaryDer.buffer,
-        algoParams,
-        true,
-        ["verify"]
-      );
-    }
+    
+        return await crypto.subtle.importKey(
+          "spki",
+          binaryDer.buffer,
+          algoParams,
+          true,
+          ["verify"]
+        );
+      }
     }  
     window.verifyJWT = verifyJWT;
     window.importPublicKey = importPublicKey;
