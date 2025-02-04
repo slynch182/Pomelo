@@ -76,30 +76,28 @@
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
-
+    
         // Decode the JWT header to get the algorithm
         const headerBase64Url = token.split('.')[0];
         const headerBase64 = headerBase64Url.replace(/-/g, '+').replace(/_/g, '/');
         const headerJson = JSON.parse(window.atob(headerBase64));
-        const algorithm = header.alg;
+        const algorithm = headerJson.alg;
     
-        console.log("JWT header:", header);
+        console.log("JWT header:", headerJson);
         console.log("Algorithm:", algorithm);
-
-
-        const key = await importPublicKey(publicKeyPEM);
+    
+        const key = await importPublicKey(publicKeyPEM, algorithm);
         console.log("Public key imported:", key);
         const { payload, header } = await jose.jwtVerify(token, key, { algorithms: [algorithm] });
-        console.log("JWT header:", header);
         console.log("JWT payload:", payload);
-        return payload;
+        return { payload, header };
       } catch (error) {
         console.error("JWT verification failed:", error);
         throw new Error("JWT verification failed: " + error.message);
       }
     }
-
-    async function importPublicKey(pem) {
+    
+    async function importPublicKey(pem, algorithm) {
       const binaryDerString = window.atob(pem.replace(/(-----(BEGIN|END) PUBLIC KEY-----|\n)/g, ""));
       const binaryDer = new Uint8Array(binaryDerString.length);
       for (let i = 0; i < binaryDerString.length; i++) {
