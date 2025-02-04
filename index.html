@@ -367,9 +367,16 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
       const jwtColumnCells = document.querySelectorAll('td:nth-child(3)');
       
       const isHidden = jwtColumnHeaders[0].style.display === 'none';
-    
-      jwtColumnHeaders.forEach(cell => cell.style.display = isHidden ? '' : 'none');
-      jwtColumnCells.forEach(cell => cell.style.display = isHidden ? '' : 'none');
+      console.log(`JWT Column is hidden: ${isHidden}`); // Debugging log
+      
+      jwtColumnHeaders.forEach(cell => {
+        cell.style.display = isHidden ? '' : 'none';
+        console.log(`Setting header display to: ${cell.style.display}`); // Debugging log
+      });
+      jwtColumnCells.forEach(cell => {
+        cell.style.display = isHidden ? '' : 'none';
+        console.log(`Setting cell display to: ${cell.style.display}`); // Debugging log
+      });
     }
   </script>
 </body>
