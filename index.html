@@ -332,7 +332,11 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
     function clearPublicKey() {
       document.querySelector('textarea[name="public-key"]').value = '';
     }
-
+    
+    function toggleJWTColumn() {
+      const jwtColumn = document.querySelectorAll('td:nth-child(3), th:nth-child(3)');
+      jwtColumn.forEach(cell => cell.style.display = cell.style.display === 'none' ? '' : 'none');
+    }
   </script>
 
   <p></p>
@@ -353,6 +357,7 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
     <tbody>
     </tbody>
   </table>
+  <button onclick="toggleJWTColumn()">Show/Hide JWT Column</button>
 
   <h2>Enter Public Key</h2>
   <textarea name="public-key" rows="10" cols="100" placeholder="Enter your public key here..."></textarea>
