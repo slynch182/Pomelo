@@ -37,7 +37,7 @@
     }
 
     input[name="text"] {
-      width: 50%; /* Adjust the width as needed */
+      width: 25%; /* Adjust the width as needed */
     }
     
     /* CSS to style table columns */
@@ -339,8 +339,13 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
     }
     
     function toggleJWTColumn() {
-      const jwtColumn = document.querySelectorAll('td:nth-child(3), th:nth-child(3)');
-      jwtColumn.forEach(cell => cell.style.display = cell.style.display === 'none' ? '' : 'none');
+      const jwtColumnHeaders = document.querySelectorAll('th:nth-child(3)');
+      const jwtColumnCells = document.querySelectorAll('td:nth-child(3)');
+      
+      const isHidden = jwtColumnHeaders[0].style.display === 'none';
+    
+      jwtColumnHeaders.forEach(cell => cell.style.display = isHidden ? '' : 'none');
+      jwtColumnCells.forEach(cell => cell.style.display = isHidden ? '' : 'none');
     }
   </script>
 
