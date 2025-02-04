@@ -76,6 +76,7 @@
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
+        console.log("Using public key:", publicKey);  // Log the public key used
   
         // Decode the JWT header to get the algorithm
         const headerBase64Url = token.split('.')[0];
