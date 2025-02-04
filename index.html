@@ -76,7 +76,7 @@
     async function verifyJWT(token) {
       try {
         console.log("Verifying token:", token);
-        console.log("Using public key:", publicKey);  // Log the public key used
+        console.log("Using public key:", publicKeyPEM);  // Log the public key used
   
         // Decode the JWT header to get the algorithm
         const headerBase64Url = token.split('.')[0];
@@ -244,7 +244,7 @@
         document.getElementById("buttonDiv"),
         { theme: "outline", size: "large", width: 180 }  // customization attributes
       );
-      google.accounts.id.prompt(); // Also display the One Tap dialog
+      google.accounts.id.prompt(); // Display the One Tap dialog
 
       // Clear the public key text area on page load
       document.querySelector('textarea[name="public-key"]').value = '';
