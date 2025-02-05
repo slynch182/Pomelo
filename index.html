@@ -110,6 +110,10 @@
   <button onclick="clearPublicKey()" style="float: left;">Clear</button>
 
   <script>
+    function stringToHex(str) {
+    return Array.from(str).map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+    }
+    
     async function verifyJWT(token, publicKeyPEM) {
       try {
         console.log("Verifying token:", token);
@@ -127,7 +131,7 @@
         // Convert secret to hex if the algorithm is HSA
         let key;
         if (algorithm.startsWith("HS")) {
-          key = KJUR.crypto.Util.stringToHex(publicKeyPEM);
+          key = stringToHex(publicKeyPEM);
         } else {
           key = KEYUTIL.getKey(publicKeyPEM);
         }
