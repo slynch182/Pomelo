@@ -268,7 +268,7 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
       if (isJWT(userInput)) {
         try {
           const decodedPayload = await window.verifyJWT(userInput, userPublicKey);
-          addRow(table, JSON.stringify(decodedPayload, null, 2), userInput, true);
+          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), userInput, true);
         } catch (error) {
           document.getElementById("error-message").innerText = error.message;
           addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), userInput, false);
