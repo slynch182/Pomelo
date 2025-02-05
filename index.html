@@ -138,7 +138,7 @@
         const isValid = KJUR.jws.JWS.verify(token, key, [algorithm]);
   
         if (!isValid) {
-          throw new Error("JWT signature does not match public key or secret");
+          throw new Error("JWT signature does not match.");
         }
   
         const payload = KJUR.jws.JWS.parse(token);
