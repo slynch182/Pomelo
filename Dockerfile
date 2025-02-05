@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies including jose
-RUN npm install jose
+RUN npm install jsrsasign
 
 # Copy the rest of the application code to the working directory
 COPY . .
