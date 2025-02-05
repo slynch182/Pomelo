@@ -141,12 +141,11 @@
           throw new Error("JWT signature does not match.");
         }
   
-        const payload = KJUR.jws.JWS.parse(token);
-        console.log("JWT payload:", payload);
-        return payload;
+        return true;
       } catch (error) {
         console.error("JWT verification failed:", error);
         throw new Error("JWT verification failed: " + error.message);
+        return false;
       }
     }
 
@@ -276,13 +275,8 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
       const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
       
       if (isJWT(userInput)) {
-        try {
-          const decodedPayload = await window.verifyJWT(userInput, userPublicKey);
-          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), userInput, true);
-        } catch (error) {
-          document.getElementById("error-message").innerText = error.message;
-          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), userInput, false);
-        }
+          const isValidJWT = await window.verifyJWT(userInput, userPublicKey);
+          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), userInput, isValidJWT);
       } else {
         addRow(table, userInput, '', false);
       }
