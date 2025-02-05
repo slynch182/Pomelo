@@ -306,7 +306,13 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
     contentCell.innerText = content;
     timeCell.innerText = formattedTime;
     jwtCell.innerText = jwt;
-  
+    
+    // Check if the third column header is visible, and set the cell display accordingly
+    const jwtColumnHeader = document.querySelector('th:nth-child(3)');
+    if (jwtColumnHeader.style.display !== 'none') {
+      jwtCell.style.display = 'table-cell';
+    }
+    
     if (isValidJWT) {
       row.style.backgroundColor = "red";
     }
