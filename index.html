@@ -275,8 +275,11 @@ arJj3+aNeC2aK9GT7Hct1OJGWQGbUkNWTeUr+Ui09PjBit+AMYuHgA==
       const timezone = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
       
       if (isJWT(userInput)) {
-          const isValidJWT = await window.verifyJWT(userInput, userPublicKey);
-          addRow(table, JSON.stringify(decodeJwt(userInput), null, 2), userInput, isValidJWT);
+        const isValidJWT = await window.verifyJWT(userInput, userPublicKey);
+        addRow(table, userInput, userInput, isValidJWT);
+        if (!isValidJWT) {
+          document.getElementById("error-message").innerText = "Invalid JWT";
+        }
       } else {
         addRow(table, userInput, '', false);
       }
