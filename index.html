@@ -127,9 +127,9 @@
         // Convert secret to hex if the algorithm is HSA
         let key;
         if (algorithm.startsWith("HS")) {
-          key = KJUR.crypto.Util.stringToHex(secret);
+          key = KJUR.crypto.Util.stringToHex(publicKeyPEM);
         } else {
-          key = KEYUTIL.getKey(secret);
+          key = KEYUTIL.getKey(publicKeyPEM);
         }
         const isValid = KJUR.jws.JWS.verify(token, key, [algorithm]);
   
